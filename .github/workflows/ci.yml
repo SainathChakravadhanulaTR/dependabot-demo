@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # NOTE: action versions are intentionally old (v3 / v4) so the
+      # `github-actions` ecosystem block in dependabot.yml has bumps to propose.
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python -c "import requests, yaml, click, boto3; print('imports ok')"

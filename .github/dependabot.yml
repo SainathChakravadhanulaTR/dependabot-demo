@@ -1,0 +1,67 @@
+version: 2
+
+# ----------------------------------------------------------------------------
+# Dependabot config — TR baseline (proof-of-concept)
+#
+# Design goals this config encodes:
+#   1. ONE weekly wave of PRs (not daily noise).
+#   2. PRs are GROUPED — minor+patch bumps land in a single combined PR per
+#      ecosystem instead of one PR per package.
+#   3. NO major-version PRs — majors are routinely breaking, so we file them
+#      away and do major upgrades by hand, deliberately, with a test plan.
+#   4. Hard CAP on concurrent open PRs so the queue can never explode.
+#
+# Note: security-update PRs (CVE-driven) bypass `ignore` and the open-PR
+# limit by design. That is the behaviour we want.
+# ----------------------------------------------------------------------------
+
+updates:
+  # -------- Python deps (pip / requirements.txt) --------
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    groups:
+      python-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+    labels:
+      - "dependencies"
+      - "dependabot"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  # -------- GitHub Actions pinned versions --------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 3
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"

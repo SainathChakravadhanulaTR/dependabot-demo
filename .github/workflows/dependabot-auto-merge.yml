@@ -1,0 +1,33 @@
+name: Dependabot auto-merge
+
+# Auto-merges Dependabot PRs that are patch- or minor-bumps once CI passes.
+# Major bumps are filtered out at the dependabot.yml level, so this workflow
+# only ever sees safe updates. Still, the conditional below is an extra guard.
+#
+# Requires repo settings:
+#   Settings -> General -> "Allow auto-merge"  (enabled)
+#   Settings -> Branches -> protect `main`     (require status checks)
+
+on: pull_request_target
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+
+      - name: Enable auto-merge for patch/minor updates
+        if: |
+          steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+          steps.meta.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
