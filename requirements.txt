@@ -4,9 +4,9 @@
 # which will also exercise the security-updates path (separate from the
 # weekly version-update PRs).
 
-requests==2.28.0
-urllib3==1.26.5
+requests==2.34.2
+urllib3==1.26.20
 pyyaml==5.4.1
-python-dotenv==0.21.0
-click==8.1.0
-boto3==1.26.0
+python-dotenv==0.21.1
+click==8.4.0
+boto3==1.43.10
