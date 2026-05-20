@@ -38,8 +38,9 @@ updates:
       - "dependencies"
       - "dependabot"
     commit-message:
+      # `include: scope` would re-append "(deps)" and produce
+      # "chore(deps)(deps): ..." — drop it and keep just the literal prefix.
       prefix: "chore(deps)"
-      include: "scope"
 
   # -------- GitHub Actions pinned versions --------
   - package-ecosystem: "github-actions"
@@ -64,4 +65,3 @@ updates:
       - "ci"
     commit-message:
       prefix: "chore(ci)"
-      include: "scope"
