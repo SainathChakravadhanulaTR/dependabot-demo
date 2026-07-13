@@ -9,4 +9,4 @@ urllib3==1.26.20
 pyyaml==5.4.1
 python-dotenv==0.21.1
 click==8.4.2
-boto3==1.43.40
+boto3==1.43.46
